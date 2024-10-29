@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     public Action inventory;
     private Rigidbody myRb;
 
+    [Header("Pause")]
+    public Action pause;
+    private bool isPause;
+
     private void Awake()
     {
         myRb = GetComponent<Rigidbody>();
@@ -61,7 +65,7 @@ public class PlayerController : MonoBehaviour
         camCurXRot += mouseDelta.y * lookSensitivity;
         camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
         cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
-        
+
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
     }
 
@@ -101,6 +105,15 @@ public class PlayerController : MonoBehaviour
         if (context.phase == InputActionPhase.Started && IsGrounded())
         {
             myRb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        }
+    }
+
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            pause?.Invoke();
+            ToggleCursor();
         }
     }
 

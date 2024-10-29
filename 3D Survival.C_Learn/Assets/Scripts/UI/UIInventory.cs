@@ -2,11 +2,10 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 
-public class UIInventory : MonoBehaviour
+public class UIInventory : BasePopup
 {
     public ItemSlot[] slotArr;
 
-    public GameObject inventoryWindow;
     public Transform slotPanel;
     public Transform dropPosition;
 
@@ -28,7 +27,7 @@ public class UIInventory : MonoBehaviour
 
     int curEquipIndex;
     // Start is called before the first frame update
-    private void Start()
+    protected override void Start()
     {
         controller = CharacterManager.Instance.Player.controller;
         condition = CharacterManager.Instance.Player.condition;
@@ -37,7 +36,6 @@ public class UIInventory : MonoBehaviour
         controller.inventory += Toggle;
         CharacterManager.Instance.Player.addItem += AddItem;
 
-        inventoryWindow.SetActive(false);
         slotArr = new ItemSlot[slotPanel.childCount];
 
         for (int i = 0; i < slotArr.Length; i++)
@@ -48,6 +46,7 @@ public class UIInventory : MonoBehaviour
         }
 
         ClearSelectendItemWindow();
+        base.Start();
     }
 
     private void ClearSelectendItemWindow()
@@ -61,23 +60,6 @@ public class UIInventory : MonoBehaviour
         equipButton.SetActive(false);
         unequipButton.SetActive(false);
         dropButton.SetActive(false);
-    }
-
-    public void Toggle()
-    {
-        if (IsOpen())
-        {
-            inventoryWindow.SetActive(false);
-        }
-        else
-        {
-            inventoryWindow.SetActive(true);
-        }
-    }
-
-    public bool IsOpen()
-    {
-        return inventoryWindow.activeInHierarchy;
     }
 
     private void AddItem()
