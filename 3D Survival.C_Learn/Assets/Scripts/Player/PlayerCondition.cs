@@ -8,7 +8,12 @@ public interface IDamagalbe
     public void TakePhysicalDamage(int damage);
 }
 
-public class PlayerCondition : MonoBehaviour, IDamagalbe
+public interface IHealalbe
+{
+    public void TakePhysicalHeal(int damage);
+}
+
+public class PlayerCondition : MonoBehaviour, IDamagalbe, IHealalbe
 {
     public UICondition uiCondition;
 
@@ -17,7 +22,9 @@ public class PlayerCondition : MonoBehaviour, IDamagalbe
     Condition stamina { get { return uiCondition.stamina; } }
 
     public float noHungerHealthDecay;
+
     public event Action onTakeDamage;
+    public event Action onTakeHeal;
 
     // Update is called once per frame
     void Update()
@@ -64,5 +71,11 @@ public class PlayerCondition : MonoBehaviour, IDamagalbe
 
         stamina.curValue -= amount;
         return true;
+    }
+
+    public void TakePhysicalHeal(int heal)
+    {
+        health.Add(heal);
+        onTakeHeal?.Invoke();
     }
 }

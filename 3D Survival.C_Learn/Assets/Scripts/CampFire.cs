@@ -9,17 +9,18 @@ public class CampFire : MonoBehaviour
 
     List<IDamagalbe> thingList = new List<IDamagalbe>();
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        InvokeRepeating(nameof(DealDamage), 0, damageRate);
-    }
+    private Coroutine coDealDamage;
 
-    private void DealDamage()
+    private IEnumerator CoDealDamage()
     {
-        for (int i = 0; i < thingList.Count; i++)
+        while (true)
         {
-            thingList[i].TakePhysicalDamage(damage);
+            yield return new WaitForSeconds(damageRate);
+
+            for (int i = 0; i < thingList.Count; i++)
+            {
+                thingList[i].TakePhysicalDamage(damage);
+            }
         }
     }
 
@@ -28,6 +29,7 @@ public class CampFire : MonoBehaviour
         if (other.TryGetComponent(out IDamagalbe damagalbe))
         {
             thingList.Add(damagalbe);
+            coDealDamage = StartCoroutine(CoDealDamage());
         }
     }
 
@@ -36,6 +38,7 @@ public class CampFire : MonoBehaviour
         if (other.TryGetComponent(out IDamagalbe damagalbe))
         {
             thingList.Remove(damagalbe);
+            StopCoroutine(coDealDamage);
         }
     }
 }
