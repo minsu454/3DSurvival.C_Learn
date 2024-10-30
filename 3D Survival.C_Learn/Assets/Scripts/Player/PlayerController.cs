@@ -21,12 +21,14 @@ public class PlayerController : MonoBehaviour
     private Vector2 mouseDelta;
     public bool canLook = true;
 
-    public Action inventory;
+    public Func<bool> inventory;
     private Rigidbody myRb;
 
     [Header("Pause")]
-    public Action pause;
+    public Func<bool> pause;
     private bool isPause;
+
+    private int toggleStack = 0;
 
     private void Awake()
     {
@@ -112,8 +114,8 @@ public class PlayerController : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
-            pause?.Invoke();
-            ToggleCursor();
+            bool uiActive = pause.Invoke();
+            ToggleCursor(uiActive);
         }
     }
 
@@ -148,14 +150,18 @@ public class PlayerController : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
-            inventory?.Invoke();
-            ToggleCursor();
+            bool uiActive = inventory.Invoke();
+            ToggleCursor(uiActive);
         }
     }
 
-    private void ToggleCursor()
+    private void ToggleCursor(bool toggle)
     {
-        bool toggle = Cursor.lockState == CursorLockMode.Locked;
+        toggleStack += toggle ? 1 : -1;
+
+        if (!toggle && toggleStack != 0)
+            return;
+
         Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
         canLook = !toggle;
     }

@@ -9,15 +9,17 @@ public class BasePopup : MonoBehaviour
         window.SetActive(false);
     }
 
-    public void Toggle()
+    public bool Toggle()
     {
         if (IsOpen())
         {
             window.SetActive(false);
+            return false;
         }
         else
         {
             window.SetActive(true);
+            return true;
         }
     }
 
