@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDamagalbe
+public interface IDamagable
 {
     public void TakePhysicalDamage(int damage);
 }
@@ -13,13 +13,14 @@ public interface IHealalbe
     public void TakePhysicalHeal(int damage);
 }
 
-public class PlayerCondition : MonoBehaviour, IDamagalbe, IHealalbe
+public class PlayerCondition : MonoBehaviour, IDamagable, IHealalbe
 {
     public UICondition uiCondition;
 
     Condition health { get { return uiCondition.health; } }
     Condition hunger { get { return uiCondition.hunger; } }
     Condition stamina { get { return uiCondition.stamina; } }
+    Condition mana { get { return uiCondition.mana; } }
 
     public float noHungerHealthDecay;
 
@@ -31,6 +32,7 @@ public class PlayerCondition : MonoBehaviour, IDamagalbe, IHealalbe
     {
         hunger.Subtract(hunger.passiveValue * Time.deltaTime);
         stamina.Add(stamina.passiveValue * Time.deltaTime);
+        mana.Add(mana.passiveValue * Time.deltaTime);
         
         if (hunger.curValue == 0f)
         {
@@ -69,7 +71,17 @@ public class PlayerCondition : MonoBehaviour, IDamagalbe, IHealalbe
         if (stamina.curValue - amount < 0f)
             return false;
 
-        stamina.curValue -= amount;
+        stamina.Subtract(amount);
+        return true;
+    }
+
+    public bool UseSkill(float manaAmount, float healAmount)
+    {
+        if (stamina.curValue - manaAmount < 0f)
+            return false;
+
+        mana.Subtract(manaAmount);
+        Heal(healAmount);
         return true;
     }
 

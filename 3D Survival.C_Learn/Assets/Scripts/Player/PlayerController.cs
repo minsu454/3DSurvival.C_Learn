@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     public Func<bool> inventory;
     private Rigidbody myRb;
 
+    [SerializeField] private float useManaAmount = 10;
+    [SerializeField] private float healAmount = 10;
+
     [Header("Pause")]
     public Func<bool> pause;
     private bool isPause;
@@ -116,6 +119,14 @@ public class PlayerController : MonoBehaviour
         {
             bool uiActive = pause.Invoke();
             ToggleCursor(uiActive);
+        }
+    }
+
+    public void OnSkill(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            CharacterManager.Instance.Player.condition.UseSkill(useManaAmount, healAmount);
         }
     }
 

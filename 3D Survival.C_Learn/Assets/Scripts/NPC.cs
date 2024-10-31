@@ -10,7 +10,7 @@ public enum AIState
     Attacking
 }
 
-public class NPC : MonoBehaviour, IDamagalbe
+public class NPC : MonoBehaviour, IDamagable
 {
     [Header("Stats")]
     public int health;
@@ -146,7 +146,7 @@ public class NPC : MonoBehaviour, IDamagalbe
             if (Time.time - lastAttackTime > attackRate)
             {
                 lastAttackTime = Time.time;
-                CharacterManager.Instance.Player.controller.GetComponent<IDamagalbe>().TakePhysicalDamage(damage);
+                CharacterManager.Instance.Player.controller.GetComponent<IDamagable>().TakePhysicalDamage(damage);
                 animator.speed = 1;
                 animator.SetTrigger("Attack");
             }

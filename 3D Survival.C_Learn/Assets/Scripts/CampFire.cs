@@ -7,7 +7,7 @@ public class CampFire : MonoBehaviour
     public int damage;
     public float damageRate;
 
-    List<IDamagalbe> thingList = new List<IDamagalbe>();
+    List<IDamagable> thingList = new List<IDamagable>();
 
     private Coroutine coDealDamage;
 
@@ -26,7 +26,7 @@ public class CampFire : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out IDamagalbe damagalbe))
+        if (other.TryGetComponent(out IDamagable damagalbe))
         {
             thingList.Add(damagalbe);
             coDealDamage = StartCoroutine(CoDealDamage());
@@ -35,7 +35,7 @@ public class CampFire : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent(out IDamagalbe damagalbe))
+        if (other.TryGetComponent(out IDamagable damagalbe))
         {
             thingList.Remove(damagalbe);
             StopCoroutine(coDealDamage);

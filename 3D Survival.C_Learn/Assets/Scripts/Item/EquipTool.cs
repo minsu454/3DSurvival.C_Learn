@@ -58,7 +58,7 @@ public class EquipTool : Equip
             {
                 resource.Gether(hit.point, hit.normal);
             }
-            else if (doesDealDamage && hit.collider.TryGetComponent(out IDamagalbe entity))
+            else if (doesDealDamage && hit.collider.TryGetComponent(out IDamagable entity))
             {
                 entity.TakePhysicalDamage(damage);
             }
