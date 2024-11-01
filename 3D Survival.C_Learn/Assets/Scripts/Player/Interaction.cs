@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,7 +13,7 @@ public class Interaction : MonoBehaviour
     public GameObject curInteractGo;
     private IInteractable curInteractable;
 
-    public TextMeshProUGUI promptText;
+    public event Action<bool, IInteractable> promptTextEvent;
     private Camera camera;
 
     private void Start()
@@ -36,21 +37,15 @@ public class Interaction : MonoBehaviour
             {
                 curInteractGo = hit.collider.gameObject;
                 curInteractable = hit.collider.GetComponent<IInteractable>();
-                SetPromptText();
+                promptTextEvent?.Invoke(true, curInteractable);
             }
         }
         else
         {
             curInteractGo = null;
             curInteractable = null;
-            promptText.gameObject.SetActive(false);
+            promptTextEvent?.Invoke(false, curInteractable);
         }
-    }
-
-    private void SetPromptText()
-    {
-        promptText.gameObject.SetActive(true);
-        promptText.text = curInteractable.GetInteractPrompt();
     }
 
     public void OnInteractInput(InputAction.CallbackContext context)
@@ -60,7 +55,7 @@ public class Interaction : MonoBehaviour
             curInteractable.OnInteract();
             curInteractGo = null;
             curInteractable = null;
-            promptText.gameObject.SetActive(false);
+            promptTextEvent?.Invoke(false, curInteractable);
         }
     }
 }

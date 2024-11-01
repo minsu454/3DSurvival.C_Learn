@@ -26,6 +26,10 @@ public class UIInventory : BasePopup
     private int selectedItemIndex = 0;
 
     int curEquipIndex;
+
+    [Header("PromptText")]
+    [SerializeField] private TextMeshProUGUI promptText;
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -46,6 +50,8 @@ public class UIInventory : BasePopup
         }
 
         ClearSelectendItemWindow();
+        CharacterManager.Instance.Player.interaction.promptTextEvent += SetPromptText;
+
         base.Start();
     }
 
@@ -233,5 +239,12 @@ public class UIInventory : BasePopup
     public void OnUnEquipButton()
     {
         UnEquip(selectedItemIndex);
+    }
+
+    private void SetPromptText(bool active, IInteractable curInteractable)
+    {
+        promptText.gameObject.SetActive(active);
+        if(curInteractable != null)
+            promptText.text = curInteractable.GetInteractPrompt();
     }
 }
